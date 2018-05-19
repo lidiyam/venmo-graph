@@ -55,5 +55,7 @@ if __name__ == '__main__':
 		for line in lines:
 			line = json.loads(line)
 			process_transaction(g, line['created_time'], line['actor'], line['target'])
-			print find_median(g)
+			median = find_median(g)
+			with open(args.output_file, 'a') as out:
+				out.write(str(median)+'\n')
 
