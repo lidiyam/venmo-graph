@@ -38,7 +38,8 @@ def find_median(g):
 	half, odd = divmod(len(arr), 2)
 	if odd:
 		return arr[half]
-	return (arr[half - 1] + arr[half]) / 2.0
+	median = (arr[half - 1] + arr[half]) / 2.00
+	return median
 
 
 if __name__ == '__main__':
@@ -57,5 +58,5 @@ if __name__ == '__main__':
 			process_transaction(g, line['created_time'], line['actor'], line['target'])
 			median = find_median(g)
 			with open(args.output_file, 'a') as out:
-				out.write(str(median)+'\n')
+				out.write("{:0.2f}\n".format(median))
 
