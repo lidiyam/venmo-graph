@@ -12,17 +12,15 @@ from utils import graph
 
 
 def process_transaction(g, ts, actor, target):
-	# print ts, actor, target
-	ts = datetime.datetime.strptime(ts, '%Y-%m-%dT%H:%M:%SZ')
+    # update time interval (ts_start, ts_end)
+    ts = datetime.datetime.strptime(ts, '%Y-%m-%dT%H:%M:%SZ')
 	if not g.ts_end or ts > g.ts_end:
 		g.ts_end = ts
 		g.ts_start = g.ts_end - datetime.timedelta(seconds=60)
 	# print g.ts_start, g.ts_end
 
 	g.addEdge(actor, target)
-
 	heapq.heappush(g.heap, (ts, [actor, target]))
-
 	while g.heap:
 		min_ts, [u, v] = min(g.heap)
 		if min_ts < g.ts_start:

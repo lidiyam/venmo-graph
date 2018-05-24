@@ -1,4 +1,4 @@
-from heapq import *
+from heapq import heappush, heappop
 
 class MedianFinder(object):
 
@@ -8,7 +8,6 @@ class MedianFinder(object):
         """
         self.minheap = []   # top half
         self.maxheap = []   # bottom half
-        self.median = 0
         
 
     def addNum(self, num):
@@ -16,38 +15,40 @@ class MedianFinder(object):
         :type num: int
         :rtype: void
         """
-        if num >= self.median:
+        median = self.findMedian()
+        if num >= median:
             # top half
             if len(self.minheap) == len(self.maxheap):   
                 heappush(self.minheap, num)
-                self.median = self.minheap[0] * 1.0
             elif len(self.minheap) > len(self.maxheap):
                 moved = heappop(self.minheap)
-                heappush(self.maxheap, moved*-1.0)
+                heappush(self.maxheap, -moved)
                 heappush(self.minheap, num)
-                self.median = (num + moved) / 2.0
             else:
                 heappush(self.minheap, num)
-                self.median = (self.minheap[0] + self.median) / 2.0
         else:
             # bottom half
             if len(self.minheap) == len(self.maxheap):
-                heappush(self.maxheap, num*-1.0)
-                self.median = self.maxheap[0] *-1.0
+                heappush(self.maxheap, -num)
             elif len(self.minheap) > len(self.maxheap):
-                heappush(self.maxheap, num*-1.0)
-                self.median = (self.minheap[0] + self.median) / 2.0
+                heappush(self.maxheap, -num)
             else:
                 moved = heappop(self.maxheap)
-                heappush(self.minheap, moved*-1.0)
-                heappush(self.maxheap, num*-1.0)
-                self.median = (self.minheap[0] + self.maxheap[0]*-1.0) / 2.0
+                heappush(self.minheap, -moved)
+                heappush(self.maxheap, -num)
 
     def findMedian(self):
         """
         :rtype: float
         """
-        return self.median
+        if len(self.minheap) == len(self.maxheap) and len(self.minheap) == 0:
+            return 0
+        if len(self.minheap) == len(self.maxheap):
+            return (self.minheap[0]*1.0 + self.maxheap[0]*-1.0) / 2.0
+        elif len(self.minheap) > len(self.maxheap):
+            return self.minheap[0]*1.0
+        else:
+            return self.maxheap[0]*-1.0
 
 
 if __name__ == '__main__':
